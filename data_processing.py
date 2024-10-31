@@ -35,13 +35,35 @@ print()
 
 # Print the average temperature for all the cities in Italy
 # Write code for me
+temperature = []
+my_country = 'Italy'
+for city in cities:
+    if city['country'] == my_country:
+        temperature.append(float(city['temperature']))
+print(sum(temperature)/len(temperature))
+print()
 
 # Print the max temperature for all the cities in Italy
 # Write code for me
+temperature = []
+my_country = 'Italy'
+for city in cities:
+    if city['country'] == my_country:
+        temperature.append(float(city['temperature']))
+print(max(temperature))
+print()
 
 # Let's write a function to filter out only items that meet the condition
 def filter(condition, dict_list):
-    pass
+    filtered = []
+    for i in dict_list:
+        if condition(i):
+            filtered.append(i)
+    return filtered
+x = filter(lambda x: float(x["latitude"]) <= 50.0 and x["country"] == 'Italy', cities)
+for i in x:
+    print(i)
+
 
 # Let's write a function to do aggregation given an aggregation function and an aggregation key
 def aggregate(aggregation_key, aggregation_function, dict_list):
@@ -49,6 +71,37 @@ def aggregate(aggregation_key, aggregation_function, dict_list):
 
 # Let's write code to
 # - print the average temperature for all the cities in Italy
+temperature = []
+my_country = 'Italy'
+for city in cities:
+    if city['country'] == my_country:
+        temperature.append(float(city['temperature']))
+print(sum(temperature)/len(temperature))
+print()
+
 # - print the average temperature for all the cities in Sweden
+temperature = []
+my_country = 'Sweden'
+for city in cities:
+    if city['country'] == my_country:
+        temperature.append(float(city['temperature']))
+print(sum(temperature)/len(temperature))
+print()
+
 # - print the min temperature for all the cities in Italy
+temperature = []
+my_country = 'Italy'
+for city in cities:
+    if city['country'] == my_country:
+        temperature.append(float(city['temperature']))
+print(min(temperature))
+print()
+
 # - print the max temperature for all the cities in Sweden
+temperature = []
+my_country = 'Sweden'
+for city in cities:
+    if city['country'] == my_country:
+        temperature.append(float(city['temperature']))
+print(max(temperature))
+print()
