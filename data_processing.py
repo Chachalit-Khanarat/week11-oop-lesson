@@ -32,32 +32,14 @@ class data:
         return aggregation_function(keep)
 
 
-_min = data.aggregate("temperature", lambda x : min(x), data.filter(lambda y: y["country"] in [k["country"] for k in data().country if k["coastline"]=="yes"], data().city))
-_max = data.aggregate("temperature", lambda x : max(x), data.filter(lambda y: y["country"] in [k["country"] for k in data().country if k["coastline"]=="yes"], data().city))
-print(_min, _max)
+data.aggregate("temperature", 
+               lambda x : print(min(x),": is the min temperatures for cities in EU that do not have coastlines"), 
+               data.filter(lambda y: y["country"] in [k["country"] for k in data().country if k["coastline"]=="yes"],data().city))
+data.aggregate("temperature", lambda x : print(max(x),": is the max temperatures for cities in EU that do not have coastlines"),
+               data.filter(lambda y: y["country"] in [k["country"] for k in data().country if k["coastline"]=="yes"], data().city))
 
 
-
-
-
-
-
-
-
-
-
-
-
-# # Let's write code to
-# # - print the average temperature for all the cities in Italy
-# avg_temp = aggregate("temperature", lambda x : sum(x)/len(x), filter(lambda y : y["country"] == "Italy", cities) )
-# print(avg_temp)
-# # - print the average temperature for all the cities in Sweden
-# avg_temp = aggregate("temperature", lambda x : sum(x)/len(x), filter(lambda y : y["country"] == "Sweden", cities) )
-# print(avg_temp)
-# # - print the min temperature for all the cities in Italy
-# avg_temp = aggregate("temperature", lambda x : min(x), filter(lambda y : y["country"] == "Italy", cities) )
-# print(avg_temp)
-# # - print the max temperature for all the cities in Sweden
-# avg_temp = aggregate("temperature", lambda x : max(x), filter(lambda y : y["country"] == "Italy", cities) )
-# print(avg_temp)
+data.aggregate("latitude", lambda x : print(max(x),"max latitude"), 
+               data.filter(lambda y: y["country"] in [k["country"] for k in data().country], data().city))
+data.aggregate("latitude", lambda x : print(min(x),"min latitude"), 
+               data.filter(lambda y: y["country"] in [k["country"] for k in data().country], data().city))
