@@ -3,43 +3,63 @@ import csv, os
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
-class data:
+class TableDB:
     def __init__(self):
-        self.country = []
-        self.city = []
+        self.db = []
 
-        with open(os.path.join(__location__, 'Countries.csv')) as f:
-            rows = csv.DictReader(f)
-            for r in rows:
-                self.country.append(dict(r))
+    def insert(self, table):
+        if self.search(table.table_name):
+            print("Table Already Exist")
+            return False
 
-        with open(os.path.join(__location__, 'Cities.csv')) as f:
-            rows = csv.DictReader(f)
-            for r in rows:
-                self.city.append(dict(r))
+        self.db.append(table)
 
-    def filter(condition, dict_list):
+    def search(self, table_name):
+        for i in range(len(self.db)):
+            if table_name == self.db[i].table_name:
+                return self.db[i]
+        return False
+
+
+class Table:
+    def __init__(self, table_name = "name", table = []):
+        self.table_name = table_name
+        self.table = table
+
+    def filter(self, condition):
         filtered = []
-        for i in dict_list:
+        for i in self.table:
             if condition(i):
                 filtered.append(i)
         return filtered
     
-    def aggregate(aggregation_key, aggregation_function, dict_list):
+    def aggregate(self, aggregation_function, aggregation_key):
         keep = []
-        for i in dict_list:
+        for i in self.table:
             keep.append(float(i[aggregation_key]))
         return aggregation_function(keep)
 
+    def __str__(self):
+        return f"table name {self.table_name}\n{self.table}"
 
-data.aggregate("temperature", 
-               lambda x : print(min(x),": is the min temperatures for cities in EU that do not have coastlines"), 
-               data.filter(lambda y: y["country"] in [k["country"] for k in data().country if k["coastline"]=="yes"],data().city))
-data.aggregate("temperature", lambda x : print(max(x),": is the max temperatures for cities in EU that do not have coastlines"),
-               data.filter(lambda y: y["country"] in [k["country"] for k in data().country if k["coastline"]=="yes"], data().city))
+db = TableDB()
 
+with open(os.path.join(__location__, 'Countries.csv')) as f:
+    rows = csv.DictReader(f)
+    tb1 = Table(table_name="country",table=[dict(x) for x in rows])
 
-data.aggregate("latitude", lambda x : print(max(x),"max latitude"), 
-               data.filter(lambda y: y["country"] in [k["country"] for k in data().country], data().city))
-data.aggregate("latitude", lambda x : print(min(x),"min latitude"), 
-               data.filter(lambda y: y["country"] in [k["country"] for k in data().country], data().city))
+db.insert(tb1)
+
+with open(os.path.join(__location__, 'Cities.csv')) as a:
+    rows = csv.DictReader(a)
+    tb2 = Table(table_name="city",table=[dict(x) for x in rows])
+
+db.insert(tb2)
+
+tb3 = Table(table_name = "Italy", table = db.search("city").filter(lambda x : x["country"] == "Italy"))
+db.insert(tb3)
+
+tb4 = Table(table_name = "havecoastline", table = db.search("city").filter(lambda y : y["country"] in [k["country"] for k in (db.search("country").filter(lambda x : x["coastline"] == "yes"))]))
+db.insert(tb4)
+
+print(db.search("havecoastline").aggregate(lambda x : min(x), "temperature"))
