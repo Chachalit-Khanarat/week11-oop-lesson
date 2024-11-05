@@ -56,10 +56,15 @@ with open(os.path.join(__location__, 'Cities.csv')) as a:
 
 db.insert(tb2)
 
-tb3 = Table(table_name = "Italy", table = db.search("city").filter(lambda x : x["country"] == "Italy"))
+tb3= Table(table_name = "havecoastline", 
+           table = db.search("city").filter(lambda y : y["country"] in [k["country"] for k in (db.search("country").filter(lambda x : x["coastline"] == "yes"))]))
 db.insert(tb3)
 
-tb4 = Table(table_name = "havecoastline", table = db.search("city").filter(lambda y : y["country"] in [k["country"] for k in (db.search("country").filter(lambda x : x["coastline"] == "yes"))]))
-db.insert(tb4)
-
 print(db.search("havecoastline").aggregate(lambda x : min(x), "temperature"))
+print(db.search("havecoastline").aggregate(lambda x : max(x), "temperature"))
+
+for i in db.search("country").table:
+    temp = Table(table_name=i["country"], table=db.search("city").filter(lambda x : x["country"] == i["country"]))
+    db.insert(temp)
+    print(i["country"], end=' : ')
+    print(db.search(i["country"]).aggregate(lambda x : max(x) if len(x)>0 else None, "latitude"))
